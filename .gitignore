@@ -1,0 +1,19 @@
+# Compiled class files
+out/
+*.class
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Maven/Gradle build directories
+target/
+build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
