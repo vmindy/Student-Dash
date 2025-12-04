@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.studentmobileapp.pages.favorites.MiddleController"
+            prefWidth="400" prefHeight="790" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #fbfbff 0%, #f5f6fa 60%); -fx-font-family: 'System';">
+    <!-- Header -->
+    <top>
+        <HBox spacing="8.0" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="20" right="18" bottom="8" left="18"/>
+            </padding>
+            <VBox spacing="2.0">
+                <Label text="Campus Libraries" style="-fx-font-size:26px; -fx-font-weight:600; -fx-text-fill:#11121a"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Hyperlink fx:id="mapLink" text="Map" onAction="#onMapClicked"
+                       style="-fx-text-fill:#4b6cff; -fx-font-size:13px; -fx-underline:false;"/>
+        </HBox>
+    </top>
+
+    <!-- Scrollable Body -->
+    <center>
+        <ScrollPane fx:id="scroll" fitToWidth="true" pannable="true" style="-fx-background-color:transparent; -fx-padding:0;">
+            <VBox fx:id="contentBox" spacing="18.0">
+                <padding>
+                    <Insets top="12" right="18" bottom="24" left="18"/>
+                </padding>
+
+                    <!-- Central Library -->
+                    <HBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 14 16 14 16; -fx-cursor: default; -fx-effect: dropshadow(gaussian, rgba(18,23,42,0.06), 12, 0, 0, 6);">
+                        <VBox>
+                            <Label text="Central Library" style="-fx-font-size:15px; -fx-font-weight:600; -fx-text-fill:#0f1724;"/>
+                            <Label text="702 Planetarium Place" style="-fx-font-size:12px; -fx-text-fill:#9aa0aa;" wrapText="true" maxWidth="260"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <!-- West Campus Library -->
+                    <HBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 14 16 14 16; -fx-cursor: default; -fx-effect: dropshadow(gaussian, rgba(18,23,42,0.06), 12, 0, 0, 6);">
+                        <VBox>
+                            <Label text="West Campus Library" style="-fx-font-size:15px; -fx-font-weight:600; -fx-text-fill:#0f1724;"/>
+                            <Label text="601 West Nedderman Drive, CAPPA Building, Room 104" style="-fx-font-size:12px; -fx-text-fill:#9aa0aa;" wrapText="true" maxWidth="260"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <!-- Science and Engineering Library -->
+                    <HBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 14 16 14 16; -fx-cursor: default; -fx-effect: dropshadow(gaussian, rgba(18,23,42,0.06), 12, 0, 0, 6);">
+                        <VBox>
+                            <Label text="Science and Engineering Library" style="-fx-font-size:15px; -fx-font-weight:600; -fx-text-fill:#0f1724;"/>
+                            <Label text="416 S. Yates St., Nedderman Hall, Room B03" style="-fx-font-size:12px; -fx-text-fill:#9aa0aa;" wrapText="true" maxWidth="260"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- Fixed Bottom Navigation -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="48" style="-fx-background-color: #fff; -fx-background-radius: 30 30 0 0; -fx-padding: 12;">
+            <Button fx:id="homeButton" text="🏠" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToHome" prefWidth="64" prefHeight="64"/>
+            <Button fx:id="favoritesButton" text="📌" style="-fx-background-color: transparent; -fx-font-size: 22;" prefWidth="64" prefHeight="64"/>
+            <Button fx:id="profileButton" text="👤" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToSettings" prefWidth="64" prefHeight="64"/>
+        </HBox>
+    </bottom>
+</BorderPane>
