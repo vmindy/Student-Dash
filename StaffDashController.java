@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.SpinnerValueFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
