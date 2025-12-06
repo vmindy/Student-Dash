@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.studentmobileapp.pages.basement.BasementController"
+            prefWidth="375" prefHeight="812">
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="28">
+            <padding>
+                <Insets top="40" right="24" bottom="16" left="24"/>
+            </padding>
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="Basement" style="-fx-font-size: 22; -fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS"/>
+                <Hyperlink text="See All" onAction="#goToHome"/>
+            </HBox>
+
+            <!-- Purple Circle Occupancy Indicator -->
+            <StackPane maxWidth="180" maxHeight="180" minWidth="180" minHeight="180" alignment="CENTER">
+                <Circle radius="80" fill="#7B3FF2"/>
+                <Label fx:id="occupancyLabel" text="75%" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #222;" />
+            </StackPane>
+
+            <!-- Floor Buttons -->
+            <VBox spacing="16" alignment="CENTER">
+                <Button text="View Floor Plan" onAction="#openFloorPlanBasement" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+                <Button text="Console/PC Gaming" onAction="#openConsolePC" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+                <Button text="Tabletop Gaming and Arcades" onAction="#openTabletop" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+            </VBox>
+        </VBox>
+    </center>
+    <!-- Fixed Bottom Navigation -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="48" style="-fx-background-color: #fff; -fx-background-radius: 30 30 0 0; -fx-padding: 12;">
+            <Button fx:id="homeButton" text="🏠" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToHome" prefWidth="64" prefHeight="64"/>
+            <Button fx:id="favoritesButton" text="📌" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToFavorites" prefWidth="64" prefHeight="64"/>
+            <Button fx:id="profileButton" text="👤" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToSettings" prefWidth="64" prefHeight="64"/>
+        </HBox>
+    </bottom>
+</BorderPane>
