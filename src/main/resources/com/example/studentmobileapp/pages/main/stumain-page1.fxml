@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.studentmobileapp.pages.main.StuMainController"
+            prefWidth="375" prefHeight="812" style="-fx-background-color: #f6f7fb;">
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="16">
+            <padding>
+                <Insets top="32" right="24" bottom="16" left="24"/>
+            </padding>
+            <!-- Header -->
+            <Label text="UTA Central Library" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #222;" />
+            <Label text="Select a floor to view occupancy" style="-fx-font-size: 14; -fx-text-fill: #666;" />
+
+            <!-- Floor Buttons -->
+            <VBox spacing="12" alignment="CENTER">
+                <Button text="Basement" onAction="#goToBasement" 
+                        style="-fx-background-color: #7B3FF2; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+                <Button text="Floor 1 (Entrance)" onAction="#goToFloor1" 
+                        style="-fx-background-color: #FF7F32; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+                <Button text="Floor 2" onAction="#goToFloor2" 
+                        style="-fx-background-color: #F74353; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+                <Button text="Floor 3" onAction="#goToFloor3" 
+                        style="-fx-background-color: #1FA867; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+                <Button text="Floor 4 (Quiet Floor)" onAction="#goToFloor4" 
+                        style="-fx-background-color: #2CA8FF; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+                <Button text="Floor 5 (Quiet Floor)" onAction="#goToFloor5" 
+                        style="-fx-background-color: #FFD700; -fx-text-fill: #222; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+                <Button text="Floor 6" onAction="#goToFloor6" 
+                        style="-fx-background-color: #FF69B4; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;" 
+                        minHeight="48" minWidth="260" maxWidth="260"/>
+            </VBox>
+        </VBox>
+    </center>
+    <!-- Fixed Bottom Navigation -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="48" style="-fx-background-color: #fff; -fx-background-radius: 30 30 0 0; -fx-padding: 12;">
+            <Button fx:id="homeButton" text="🏠" style="-fx-background-color: transparent; -fx-font-size: 22;" prefWidth="64" prefHeight="64"/>
+            <Button fx:id="favoritesButton" text="📌" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToFavorites" prefWidth="64" prefHeight="64"/>
+            <Button fx:id="profileButton" text="👤" style="-fx-background-color: transparent; -fx-font-size: 22;" onAction="#goToSettings" prefWidth="64" prefHeight="64"/>
+        </HBox>
+    </bottom>
+</BorderPane>

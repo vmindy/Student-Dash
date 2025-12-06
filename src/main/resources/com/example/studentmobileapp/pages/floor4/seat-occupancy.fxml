@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.studentmobileapp.pages.floor4.SeatOccupancyController"
+            prefWidth="375" prefHeight="812">
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="28">
+            <padding>
+                <Insets top="40" right="24" bottom="16" left="24"/>
+            </padding>
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="Floor 4 (Quiet Floor)" style="-fx-font-size: 22; -fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS"/>
+                <Hyperlink text="See All" onAction="#goToHome"/>
+            </HBox>
+
+            <!-- Blue Circle Occupancy Indicator -->
+            <StackPane maxWidth="180" maxHeight="180" minWidth="180" minHeight="180" alignment="CENTER">
+                <Circle radius="80" fill="#2CA8FF"/>
+                <Label fx:id="occupancyLabel" text="68%" style="-fx-font-size: 34; -fx-font-weight: bold; -fx-text-fill: #222;" />
+            </StackPane>
+
+            <!-- Floor Buttons -->
+            <VBox spacing="16" alignment="CENTER">
+                <Button text="View Floor Plan" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+                <Button text="Group Study Rooms" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+                <Button text="Writing Center (411)" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+            </VBox>
+        </VBox>
+    </center>
+    <!-- Fixed Bottom Navigation -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="48" style="-fx-background-color: #fff; -fx-background-radius: 30 30 0 0; -fx-padding: 12;">
+            <Button text="View Floor Plan" onAction="#openFloorPlan4" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+            <Button text="Group Study Rooms" onAction="#openGroupStudy4" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>
+            <Button text="Writing Center (411)" onAction="#openWritingCenter" style="-fx-background-color: #E2E2E2; -fx-font-size: 18; -fx-text-fill: #222; -fx-background-radius: 10;" minHeight="48" maxWidth="260"/>        </HBox>
+    </bottom>
+</BorderPane>

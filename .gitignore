@@ -1,0 +1,28 @@
+# Build outputs
+target/
+out/
+build/
+*.class
+
+# IDE files
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+checkin.txt
+checkout.txt
+login.txt
+
+# Dependency directories
+node_modules/
