@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Spinner?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml"
@@ -64,9 +65,11 @@
             <VBox spacing="18" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22;">
                 <Label text="Manual Check-In and Check-Out" style="-fx-font-size:17px; -fx-font-weight: bold;"/>
                 <TextField fx:id="manualEntryField" promptText="Enter Student ID or Guest Email, and First &amp; Last Name"/>
-                <HBox spacing="16">
+                <HBox spacing="16" alignment="CENTER_LEFT">
                     <Button fx:id="checkInButton" text="Check In" style="-fx-font-size:14px; -fx-background-radius:8;" onAction="#handleCheckIn"/>
                     <Button fx:id="checkOutButton" text="Check Out" style="-fx-font-size:14px; -fx-background-radius:8;" onAction="#handleCheckOut"/>
+                    <Label text="Count:" style="-fx-font-size:13px;"/>
+                    <Spinner fx:id="batchCountSpinner" prefWidth="80" style="-fx-font-size:13px;"/>
                 </HBox>
             </VBox>
 

@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.SpinnerValueFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Staff dashboard controller for library occupancy management.
  * Binds UI elements to the shared OccupancyModel.
+ * Supports batch check-in/check-out with configurable count.
  */
 public class StaffDashController {
 
@@ -39,6 +41,9 @@ public class StaffDashController {
     @FXML private Label totalOccupancyLabel;
     @FXML private Label floorOccupancyLabel;
     @FXML private Label currentStudentsLabel;
+    
+    // Spinner for batch check-in/check-out count
+    @FXML private Spinner<Integer> batchCountSpinner;
 
     private final ObservableList<LogEntry> logs = FXCollections.observableArrayList();
     private final FilteredList<LogEntry> filteredLogs = new FilteredList<>(logs, p -> true);
@@ -47,6 +52,9 @@ public class StaffDashController {
     private static final Path CHECKOUT_FILE = Paths.get("checkout.txt");
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final String DEFAULT_FLOOR = OccupancyModel.FLOOR_NAMES[1]; // Floor1
+    
+    /** Default batch count for check-in/check-out operations. Adjust as needed. */
+    private static final int DEFAULT_BATCH_COUNT = 1;
 
     private final OccupancyModel occupancyModel = OccupancyModel.getInstance();
 
@@ -63,6 +71,14 @@ public class StaffDashController {
             otherLibrariesCombo.getItems().addAll(
                     "West Campus Library", "Science and Engineering Library"
             );
+        }
+        
+        // Setup batch count spinner (1-50 range, default 1)
+        if (batchCountSpinner != null) {
+            SpinnerValueFactory<Integer> valueFactory = 
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50, DEFAULT_BATCH_COUNT);
+            batchCountSpinner.setValueFactory(valueFactory);
+            batchCountSpinner.setEditable(true);
         }
 
         setupTable();
@@ -191,6 +207,16 @@ public class StaffDashController {
             logoutButton.getScene().getWindow().hide();
         }
     }
+    
+    /**
+     * Gets the current batch count from the spinner, or returns default.
+     */
+    private int getBatchCount() {
+        if (batchCountSpinner != null && batchCountSpinner.getValue() != null) {
+            return batchCountSpinner.getValue();
+        }
+        return DEFAULT_BATCH_COUNT;
+    }
 
     @FXML
     private void handleCheckIn() {
@@ -202,12 +228,13 @@ public class StaffDashController {
 
         // Get selected floor for occupancy model update, or use default
         String floorKey = getSelectedFloorKey();
+        final int count = getBatchCount();
 
         final String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
         final String[] parsed = parseInput(raw);
         final String idOrEmail = parsed[0];
         final String name = parsed[1];
-        final String line = String.join("|", timestamp, idOrEmail, name, "IN");
+        final String line = String.join("|", timestamp, idOrEmail, name, "IN", String.valueOf(count));
         final String finalFloorKey = floorKey;
 
         appendLineToFileAsync(CHECKIN_FILE, line, () -> {
@@ -215,8 +242,8 @@ public class StaffDashController {
             logs.add(0, e);
             if (manualEntryField != null) manualEntryField.clear();
 
-            // Update occupancy model (UI auto-updates via bindings)
-            occupancyModel.checkIn(finalFloorKey);
+            // Update occupancy model with batch count (UI auto-updates via bindings)
+            occupancyModel.checkInToFloor(finalFloorKey, count);
         });
     }
 
@@ -230,12 +257,13 @@ public class StaffDashController {
 
         // Get selected floor for occupancy model update, or use default
         String floorKey = getSelectedFloorKey();
+        final int count = getBatchCount();
 
         final String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
         final String[] parsed = parseInput(raw);
         final String idOrEmail = parsed[0];
         final String name = parsed[1];
-        final String line = String.join("|", timestamp, idOrEmail, name, "OUT");
+        final String line = String.join("|", timestamp, idOrEmail, name, "OUT", String.valueOf(count));
         final String finalFloorKey = floorKey;
 
         appendLineToFileAsync(CHECKOUT_FILE, line, () -> {
@@ -243,8 +271,8 @@ public class StaffDashController {
             logs.add(0, e);
             if (manualEntryField != null) manualEntryField.clear();
 
-            // Update occupancy model (UI auto-updates via bindings)
-            occupancyModel.checkOut(finalFloorKey);
+            // Update occupancy model with batch count (UI auto-updates via bindings)
+            occupancyModel.checkOutFromFloor(finalFloorKey, count);
         });
     }
 

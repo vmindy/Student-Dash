@@ -149,13 +149,7 @@ public class OccupancyModel {
      * Synchronized to prevent race conditions.
      */
     public synchronized void checkIn(String floor) {
-        IntegerProperty prop = occupiedSeatsMap.get(floor);
-        if (prop != null) {
-            int totalSeats = getTotalSeats(floor);
-            if (prop.get() < totalSeats) {
-                prop.set(prop.get() + 1);
-            }
-        }
+        checkInToFloor(floor, 1);
     }
 
     /**
@@ -164,9 +158,57 @@ public class OccupancyModel {
      * Synchronized to prevent race conditions.
      */
     public synchronized void checkOut(String floor) {
+        checkOutFromFloor(floor, 1);
+    }
+
+    /**
+     * Batch check-in: increment occupied seats by count for the specified floor.
+     * Adjusts within bounds [0, totalSeats], recalculates per-floor and overall occupancy.
+     * Uses Platform.runLater for JavaFX property writes if called from non-FX threads.
+     * Synchronized for thread safety.
+     * 
+     * @param floor the floor identifier
+     * @param count the number of visitors to check in (must be positive)
+     */
+    public synchronized void checkInToFloor(String floor, int count) {
+        if (count <= 0) return;
         IntegerProperty prop = occupiedSeatsMap.get(floor);
-        if (prop != null && prop.get() > 0) {
-            prop.set(prop.get() - 1);
+        if (prop != null) {
+            int totalSeats = getTotalSeats(floor);
+            int currentOccupied = prop.get();
+            int newOccupied = Math.min(totalSeats, currentOccupied + count);
+            updateOccupiedSeatsOnFxThread(prop, newOccupied);
+        }
+    }
+
+    /**
+     * Batch check-out: decrement occupied seats by count for the specified floor.
+     * Adjusts within bounds [0, totalSeats], recalculates per-floor and overall occupancy.
+     * Uses Platform.runLater for JavaFX property writes if called from non-FX threads.
+     * Synchronized for thread safety.
+     * 
+     * @param floor the floor identifier
+     * @param count the number of visitors to check out (must be positive)
+     */
+    public synchronized void checkOutFromFloor(String floor, int count) {
+        if (count <= 0) return;
+        IntegerProperty prop = occupiedSeatsMap.get(floor);
+        if (prop != null) {
+            int currentOccupied = prop.get();
+            int newOccupied = Math.max(0, currentOccupied - count);
+            updateOccupiedSeatsOnFxThread(prop, newOccupied);
+        }
+    }
+
+    /**
+     * Helper method to update occupied seats on the JavaFX Application Thread.
+     * If already on FX thread, updates immediately; otherwise uses Platform.runLater.
+     */
+    private void updateOccupiedSeatsOnFxThread(IntegerProperty prop, int newValue) {
+        if (Platform.isFxApplicationThread()) {
+            prop.set(newValue);
+        } else {
+            Platform.runLater(() -> prop.set(newValue));
         }
     }
 
