@@ -25,8 +25,10 @@ A JavaFX application for UTA Library seat occupancy tracking with both Student a
 
 ## Requirements
 
-- Java 11 or later
-- JavaFX SDK (included in Java 11+ or via OpenJFX)
+- **Java 11 or later** with JavaFX support, either:
+  - OpenJDK with separate [OpenJFX SDK](https://openjfx.io/) added to the module path, or
+  - A JDK distribution that includes JavaFX (e.g., Liberica Full JDK, Azul Zulu with JavaFX)
+- Alternatively, Java 8 with built-in JavaFX support
 
 ## How to Run
 

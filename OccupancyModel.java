@@ -146,8 +146,9 @@ public class OccupancyModel {
     /**
      * Check in a student on the specified floor.
      * Increments occupied seats for that floor.
+     * Synchronized to prevent race conditions.
      */
-    public void checkIn(String floor) {
+    public synchronized void checkIn(String floor) {
         IntegerProperty prop = occupiedSeatsMap.get(floor);
         if (prop != null) {
             int totalSeats = getTotalSeats(floor);
@@ -160,8 +161,9 @@ public class OccupancyModel {
     /**
      * Check out a student from the specified floor.
      * Decrements occupied seats for that floor.
+     * Synchronized to prevent race conditions.
      */
-    public void checkOut(String floor) {
+    public synchronized void checkOut(String floor) {
         IntegerProperty prop = occupiedSeatsMap.get(floor);
         if (prop != null && prop.get() > 0) {
             prop.set(prop.get() - 1);

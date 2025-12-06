@@ -46,6 +46,7 @@ public class StaffDashController {
     private static final Path CHECKIN_FILE = Paths.get("checkin.txt");
     private static final Path CHECKOUT_FILE = Paths.get("checkout.txt");
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String DEFAULT_FLOOR = OccupancyModel.FLOOR_NAMES[1]; // Floor1
 
     private final OccupancyModel occupancyModel = OccupancyModel.getInstance();
 
@@ -199,11 +200,8 @@ public class StaffDashController {
             return;
         }
 
-        // Get selected floor for occupancy model update
-        String floorKey = mapComboToFloorKey(centralFloorsCombo != null ? centralFloorsCombo.getValue() : null);
-        if (floorKey == null) {
-            floorKey = "Floor1"; // Default floor
-        }
+        // Get selected floor for occupancy model update, or use default
+        String floorKey = getSelectedFloorKey();
 
         final String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
         final String[] parsed = parseInput(raw);
@@ -217,9 +215,8 @@ public class StaffDashController {
             logs.add(0, e);
             if (manualEntryField != null) manualEntryField.clear();
 
-            // Update occupancy model
+            // Update occupancy model (UI auto-updates via bindings)
             occupancyModel.checkIn(finalFloorKey);
-            updateFloorOccupancyDisplay();
         });
     }
 
@@ -231,11 +228,8 @@ public class StaffDashController {
             return;
         }
 
-        // Get selected floor for occupancy model update
-        String floorKey = mapComboToFloorKey(centralFloorsCombo != null ? centralFloorsCombo.getValue() : null);
-        if (floorKey == null) {
-            floorKey = "Floor1"; // Default floor
-        }
+        // Get selected floor for occupancy model update, or use default
+        String floorKey = getSelectedFloorKey();
 
         final String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
         final String[] parsed = parseInput(raw);
@@ -249,10 +243,17 @@ public class StaffDashController {
             logs.add(0, e);
             if (manualEntryField != null) manualEntryField.clear();
 
-            // Update occupancy model
+            // Update occupancy model (UI auto-updates via bindings)
             occupancyModel.checkOut(finalFloorKey);
-            updateFloorOccupancyDisplay();
         });
+    }
+
+    /**
+     * Gets the selected floor key from the combo box, or returns the default floor.
+     */
+    private String getSelectedFloorKey() {
+        String floorKey = mapComboToFloorKey(centralFloorsCombo != null ? centralFloorsCombo.getValue() : null);
+        return floorKey != null ? floorKey : DEFAULT_FLOOR;
     }
 
     private void appendLineToFileAsync(Path file, String line, Runnable onComplete) {
