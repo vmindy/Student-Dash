@@ -5,9 +5,9 @@ A JavaFX application for UTA Library seat occupancy tracking with both Student a
 ## Features
 
 - **Student Dashboard**: View floor-by-floor occupancy percentages, navigate to floor details, and access useful library links
-- **Staff Dashboard**: Manage check-ins/check-outs, view logs, and monitor real-time occupancy across all floors
+- **Staff Dashboard**: Manage check-ins/check-outs with batch count support, view logs, and monitor real-time occupancy across all floors
 - **Shared Occupancy Model**: Both dashboards share a singleton OccupancyModel with live JavaFX property bindings
-- **Real-time Simulation**: An OccupancySimulator seeds initial placeholder values and periodically updates occupancy data
+- **Real-time Simulation**: An OccupancySimulator seeds initial placeholder values and periodically updates occupancy data, keeping levels around ~50%
 
 ## Project Structure
 
@@ -71,19 +71,59 @@ The `OccupancyModel` singleton provides:
   - `IntegerProperty occupiedSeats` - Currently occupied seats
   - `DoubleProperty occupancyPercent` - Calculated as `(occupiedSeats / totalSeats) * 100`
 
-Methods:
-- `checkIn(floor)` - Increment occupied seats for a floor
-- `checkOut(floor)` - Decrement occupied seats for a floor
+### Batch Check-In/Check-Out Methods
+
+- `checkIn(floor)` - Increment occupied seats for a floor by 1
+- `checkOut(floor)` - Decrement occupied seats for a floor by 1
+- `checkInToFloor(floor, count)` - Increment occupied seats by N visitors (batch check-in)
+- `checkOutFromFloor(floor, count)` - Decrement occupied seats by N visitors (batch check-out)
 - `seedPlaceholderValues(...)` - Initialize with test data
+
+All batch methods:
+- Adjust occupied seats within bounds `[0, totalSeats]`
+- Automatically recalculate floor occupancy percentages
+- Automatically recalculate overall `currentStudents` and `overallOccupancyPercent`
+- Use `Platform.runLater` for thread-safe JavaFX property updates
+- Are synchronized for atomic updates
+
+## Staff Batch Check-In/Check-Out
+
+The Staff Dashboard includes a **batch count spinner** that allows staff to check in or check out multiple visitors at once:
+
+1. Enter a student ID/email or name in the text field
+2. Select a floor from the "Central Library Floors" dropdown
+3. Adjust the **Count** spinner (1-50) to set how many to check in/out
+4. Click **Check In** or **Check Out** to apply the batch operation
+
+### Changing the Default Staff Check-In Count
+
+To change the default batch count (currently 1), edit `StaffDashController.java`:
+
+```java
+/** Default batch count for check-in/check-out operations. Adjust as needed. */
+private static final int DEFAULT_BATCH_COUNT = 1;  // Change this value
+```
 
 ## Simulator
 
 The `OccupancySimulator`:
-- Seeds initial placeholder values on startup
-- Updates occupancy every 5 seconds with random changes
+- Seeds initial placeholder values on startup (approximately 50% occupancy per floor)
+- Uses a **nudge-toward-target** strategy to keep overall occupancy around ~50% of maxCapacity
+- Updates occupancy every 5 seconds
+- Has a 70% probability of nudging toward the 50% target, with 30% random variation
 - Uses `Platform.runLater()` for thread-safe JavaFX property updates
+- Uses the batch `checkInToFloor`/`checkOutFromFloor` methods for atomic updates
 - Automatically starts when the app launches
 - Stops gracefully when the app closes
+
+### Changing the Simulator Target Occupancy
+
+To change the target occupancy percentage (currently 50%), edit `OccupancySimulator.java`:
+
+```java
+/** Target occupancy percentage for the simulator (0.0 to 1.0). */
+private static final double TARGET_OCCUPANCY_PERCENT = 0.50;  // Change this value
+```
 
 ## Architecture Notes
 
@@ -91,3 +131,4 @@ The `OccupancySimulator`:
 - Staff dashboard displays overall and floor-specific occupancy
 - Check-in/check-out actions update the model, which triggers UI updates in both dashboards
 - URL button handlers are preserved from the original Student-Dash implementation
+- JavaFX properties and bindings ensure both dashboards update live without polling

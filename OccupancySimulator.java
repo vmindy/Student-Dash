@@ -25,6 +25,12 @@ public class OccupancySimulator {
     // Simulation parameters
     private static final int UPDATE_INTERVAL_SECONDS = 5;
     private static final int MAX_CHANGE_PER_UPDATE = 3;
+    
+    /** 
+     * Target occupancy percentage for the simulator (0.0 to 1.0).
+     * The simulator will nudge floor occupancies toward this target.
+     */
+    private static final double TARGET_OCCUPANCY_PERCENT = 0.50;
 
     private OccupancySimulator() {
         this.model = OccupancyModel.getInstance();
@@ -39,20 +45,21 @@ public class OccupancySimulator {
 
     /**
      * Seed initial placeholder values.
+     * Initial occupancy is set to approximately 50% on each floor.
      */
     public void seedInitialValues() {
         // Overall max capacity
         int maxCapacity = 200;
 
-        // Per-floor data: {totalSeats, occupiedSeats}
+        // Per-floor data: {totalSeats, occupiedSeats} - starting around 50% occupancy
         Map<String, int[]> floorData = new HashMap<>();
-        floorData.put("Basement", new int[]{30, 22});  // 73%
-        floorData.put("Floor1", new int[]{35, 33});    // 94%
-        floorData.put("Floor2", new int[]{32, 26});    // 81%
-        floorData.put("Floor3", new int[]{28, 18});    // 64%
-        floorData.put("Floor4", new int[]{25, 17});    // 68%
-        floorData.put("Floor5", new int[]{25, 12});    // 48%
-        floorData.put("Floor6", new int[]{25, 8});     // 32%
+        floorData.put("Basement", new int[]{30, 15});  // 50%
+        floorData.put("Floor1", new int[]{35, 18});    // 51%
+        floorData.put("Floor2", new int[]{32, 16});    // 50%
+        floorData.put("Floor3", new int[]{28, 14});    // 50%
+        floorData.put("Floor4", new int[]{25, 12});    // 48%
+        floorData.put("Floor5", new int[]{25, 13});    // 52%
+        floorData.put("Floor6", new int[]{25, 12});    // 48%
 
         Platform.runLater(() -> model.seedPlaceholderValues(maxCapacity, floorData));
     }
@@ -99,7 +106,9 @@ public class OccupancySimulator {
     }
 
     /**
-     * Randomly mutate occupied seats on each floor.
+     * Nudge occupied seats on each floor toward the target occupancy (~50%).
+     * Uses the batch checkInToFloor/checkOutFromFloor methods for atomic updates.
+     * The algorithm applies a bias toward the target while still allowing random variation.
      */
     private void mutateOccupancy() {
         if (!running) {
@@ -108,14 +117,36 @@ public class OccupancySimulator {
 
         for (String floor : OccupancyModel.FLOOR_NAMES) {
             int totalSeats = model.getTotalSeats(floor);
+            if (totalSeats <= 0) continue;
+            
             int currentOccupied = model.getOccupiedSeats(floor);
-
-            // Random change: -MAX_CHANGE to +MAX_CHANGE
-            int change = random.nextInt(2 * MAX_CHANGE_PER_UPDATE + 1) - MAX_CHANGE_PER_UPDATE;
-            int newOccupied = Math.max(0, Math.min(totalSeats, currentOccupied + change));
-
-            final int finalOccupied = newOccupied;
-            Platform.runLater(() -> model.setOccupiedSeats(floor, finalOccupied));
+            int targetOccupied = (int) Math.round(totalSeats * TARGET_OCCUPANCY_PERCENT);
+            
+            // Calculate direction bias: nudge toward target
+            int diff = targetOccupied - currentOccupied;
+            int direction = 0;
+            if (diff > 0) {
+                direction = 1;  // Need to increase
+            } else if (diff < 0) {
+                direction = -1; // Need to decrease
+            }
+            
+            // Random change with bias toward target: 70% chance to move toward target
+            int change;
+            if (direction != 0 && random.nextDouble() < 0.7) {
+                // Move toward target
+                change = direction * (1 + random.nextInt(MAX_CHANGE_PER_UPDATE));
+            } else {
+                // Random change: -MAX_CHANGE to +MAX_CHANGE
+                change = random.nextInt(2 * MAX_CHANGE_PER_UPDATE + 1) - MAX_CHANGE_PER_UPDATE;
+            }
+            
+            // Apply change using batch methods (they handle bounds and FX thread)
+            if (change > 0) {
+                model.checkInToFloor(floor, change);
+            } else if (change < 0) {
+                model.checkOutFromFloor(floor, -change);
+            }
         }
     }
 
