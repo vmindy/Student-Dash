@@ -1,6 +1,8 @@
 package com.example.studentmobileapp.pages.floor4;
 
 import com.example.studentmobileapp.MainAppApplication;
+import com.example.studentmobileapp.model.OccupancyModel;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -31,7 +33,14 @@ public class SeatOccupancyController {
 
     @FXML
     public void initialize() {
-        occupancyLabel.setText("68%");
+        // Bind to OccupancyModel
+        OccupancyModel model = OccupancyModel.getInstance();
+        occupancyLabel.textProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("%.0f%%", model.getOccupancyPercent("Floor4")),
+                model.occupancyPercentProperty("Floor4")
+            )
+        );
     }
 
     @FXML
