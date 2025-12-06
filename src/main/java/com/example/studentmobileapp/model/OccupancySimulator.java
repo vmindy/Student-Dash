@@ -28,13 +28,13 @@ public class OccupancySimulator {
 
     // Initial seed values per floor (totalSeats, initialOccupied)
     private static final int[][] FLOOR_SEEDS = {
-        {25, 19},  // basement: 75% -> 76%
+        {25, 19},  // basement: 76%
         {30, 28},  // floor1: 93%
-        {35, 28},  // floor2: 81%
-        {30, 20},  // floor3: 65%
+        {35, 28},  // floor2: 80%
+        {30, 20},  // floor3: 67%
         {25, 17},  // floor4: 68%
-        {30, 14},  // floor5: 48%
-        {25, 8}    // floor6: 33%
+        {30, 14},  // floor5: 47%
+        {25, 8}    // floor6: 32%
     };
 
     private OccupancySimulator() {

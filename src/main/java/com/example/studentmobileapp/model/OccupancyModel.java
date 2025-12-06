@@ -102,8 +102,15 @@ public class OccupancyModel {
 
     /**
      * Get FloorData for the specified floor.
+     * Floor names are case-insensitive.
+     * 
+     * @param floorName the name of the floor (e.g., "basement", "floor1", etc.)
+     * @return the FloorData for the floor, or null if the floor name is invalid
      */
     public FloorData getFloorData(String floorName) {
+        if (floorName == null) {
+            return null;
+        }
         return floorDataMap.get(floorName.toLowerCase());
     }
 
@@ -116,8 +123,14 @@ public class OccupancyModel {
 
     /**
      * Check in a student on a specific floor (increments occupied seats).
+     * Does nothing if the floor name is invalid or if the floor is at capacity.
+     * 
+     * @param floorName the name of the floor (case-insensitive)
      */
     public void checkIn(String floorName) {
+        if (floorName == null) {
+            return;
+        }
         FloorData fd = floorDataMap.get(floorName.toLowerCase());
         if (fd != null && fd.getOccupiedSeats() < fd.getTotalSeats()) {
             fd.setOccupiedSeats(fd.getOccupiedSeats() + 1);
@@ -126,8 +139,14 @@ public class OccupancyModel {
 
     /**
      * Check out a student from a specific floor (decrements occupied seats).
+     * Does nothing if the floor name is invalid or if no students are present.
+     * 
+     * @param floorName the name of the floor (case-insensitive)
      */
     public void checkOut(String floorName) {
+        if (floorName == null) {
+            return;
+        }
         FloorData fd = floorDataMap.get(floorName.toLowerCase());
         if (fd != null && fd.getOccupiedSeats() > 0) {
             fd.setOccupiedSeats(fd.getOccupiedSeats() - 1);
@@ -136,8 +155,16 @@ public class OccupancyModel {
 
     /**
      * Seed placeholder values for a floor.
+     * Does nothing if the floor name is invalid.
+     * 
+     * @param floorName the name of the floor (case-insensitive)
+     * @param totalSeats the total number of seats on the floor
+     * @param occupiedSeats the initial number of occupied seats
      */
     public void seedFloor(String floorName, int totalSeats, int occupiedSeats) {
+        if (floorName == null) {
+            return;
+        }
         FloorData fd = floorDataMap.get(floorName.toLowerCase());
         if (fd != null) {
             fd.setTotalSeats(totalSeats);

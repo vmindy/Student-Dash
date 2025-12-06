@@ -207,6 +207,15 @@ public class MainDashController {
         }
     }
 
+    /**
+     * Gets the floor key based on the currently selected floor in the combo box,
+     * defaulting to floor1 if nothing is selected.
+     */
+    private String getSelectedFloorKey() {
+        String selectedFloor = centralFloorsCombo != null ? centralFloorsCombo.getValue() : null;
+        return mapComboToFloorKey(selectedFloor != null ? selectedFloor : "1st Floor");
+    }
+
     @FXML
     private void handleCheckIn() {
         final String raw = manualEntryField == null ? "" : manualEntryField.getText();
@@ -221,9 +230,7 @@ public class MainDashController {
         final String line = String.join("|", timestamp, idOrEmail, name, "IN");
 
         // Update occupancy model - check in to selected floor or default floor1
-        String selectedFloor = centralFloorsCombo != null ? centralFloorsCombo.getValue() : null;
-        String floorKey = mapComboToFloorKey(selectedFloor != null ? selectedFloor : "1st Floor");
-        simulator.manualCheckIn(floorKey);
+        simulator.manualCheckIn(getSelectedFloorKey());
 
         appendLineToFileAsync(CHECKIN_FILE, line, () -> {
             LogEntry e = new LogEntry("IN", idOrEmail, name, timestamp);
@@ -246,9 +253,7 @@ public class MainDashController {
         final String line = String.join("|", timestamp, idOrEmail, name, "OUT");
 
         // Update occupancy model - check out from selected floor or default floor1
-        String selectedFloor = centralFloorsCombo != null ? centralFloorsCombo.getValue() : null;
-        String floorKey = mapComboToFloorKey(selectedFloor != null ? selectedFloor : "1st Floor");
-        simulator.manualCheckOut(floorKey);
+        simulator.manualCheckOut(getSelectedFloorKey());
 
         appendLineToFileAsync(CHECKOUT_FILE, line, () -> {
             LogEntry e = new LogEntry("OUT", idOrEmail, name, timestamp);
