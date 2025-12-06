@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Hyperlink?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.studentmobileapp.pages.staff.StaffDashController"
+            style="-fx-background-color: #f6f7fb;">
+
+    <!-- Sidebar Navigation -->
+    <left>
+        <VBox spacing="14" style="-fx-background-color: white; -fx-padding: 30 10 30 20; -fx-pref-width: 180;">
+            <Label text="UTASeatFinder" style="-fx-font-size:18px; -fx-text-fill: #1976d2; -fx-font-weight: bold;"/>
+            <Label text="Staff Dashboard" style="-fx-font-size:15px;"/>
+            <Button fx:id="manualCheckButton" text="Manual Check In" onAction="#handleManualCheckIn"
+                    style="-fx-background-color: transparent; -fx-font-size:15px; -fx-alignment: CENTER_LEFT; -fx-padding: 0;"/>
+            <Button fx:id="logsButton" text="Logs" onAction="#handleLogs"
+                    style="-fx-background-color: transparent; -fx-font-size:15px; -fx-alignment: CENTER_LEFT; -fx-padding: 0;"/>
+            <Button fx:id="logoutButton" text="Close" onAction="#handleLogout"
+                    style="-fx-background-color: transparent; -fx-font-size:15px; -fx-alignment: CENTER_LEFT; -fx-padding: 0;"/>
+        </VBox>
+    </left>
+
+    <!-- Header Area -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 18 28 18 28; -fx-border-color: #e0e0e0; -fx-border-width:0 0 1 0;">
+            <Label text="Library Occupancy Dashboard" style="-fx-font-size:26px; -fx-font-weight:bold;"/>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Label text="Staff View" style="-fx-font-size:14px; -fx-font-weight: bold;"/>
+            <Label text="Admin" style="-fx-font-size:12px; -fx-text-fill: #888;"/>
+        </HBox>
+    </top>
+
+    <!-- Main Content Area -->
+    <center>
+        <VBox spacing="26" alignment="TOP_CENTER" style="-fx-padding: 26;">
+            <!-- Occupancy Cards -->
+            <HBox spacing="24" alignment="CENTER">
+                <VBox spacing="8" alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22; -fx-pref-width: 220;">
+                    <Label text="Total Occupancy" style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+                    <Label fx:id="totalOccupancyLabel" text="0%" style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+                    <Label fx:id="currentStudentsLabel" text="0 / 0 students" style="-fx-font-size:12px; -fx-text-fill:#1976d2;"/>
+                </VBox>
+                <VBox spacing="8" alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22; -fx-pref-width: 220;">
+                    <Label text="Occupancy by Floor" style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+                    <Label fx:id="floorOccupancyLabel" text="0%" style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+                    <Label text="Select floor below" style="-fx-font-size:12px; -fx-text-fill:#f7b500;"/>
+                </VBox>
+                <VBox spacing="8" alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22; -fx-pref-width: 220;">
+                    <Label text="Live Updates" style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+                    <Label text="Auto-refresh every 5s" style="-fx-font-size:12px; -fx-text-fill:#43d96c;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Manual Check-In/Check-Out Section -->
+            <VBox spacing="18" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22;">
+                <Label text="Manual Check-In and Check-Out" style="-fx-font-size:17px; -fx-font-weight: bold;"/>
+                <TextField fx:id="manualEntryField" promptText="Enter Student ID or Guest Email, and First &amp; Last Name"/>
+                <HBox spacing="16">
+                    <Button fx:id="checkInButton" text="Check In" style="-fx-font-size:14px; -fx-background-radius:8;" onAction="#handleCheckIn"/>
+                    <Button fx:id="checkOutButton" text="Check Out" style="-fx-font-size:14px; -fx-background-radius:8;" onAction="#handleCheckOut"/>
+                </HBox>
+            </VBox>
+
+            <!-- Floor Occupancy Section -->
+            <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22;">
+                <Label text="UTA Libraries Floor By Floor Occupancy" style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+                <ComboBox fx:id="centralFloorsCombo" promptText="Central Library Floors"/>
+                <ComboBox fx:id="otherLibrariesCombo" promptText="Other Libraries"/>
+            </VBox>
+
+            <!-- Student/Guest Logs Section -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 22;">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Student/Guest Logs" style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+                    <Hyperlink fx:id="viewAllLink" text="View All"/>
+                </HBox>
+                <TableView fx:id="logsTable" style="-fx-pref-width:100%;"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
